@@ -12,7 +12,7 @@ export default function App() {
       <Stack.Screen name="Home" options={{
         // headerShown: false
         headerStyle: {
-          backgroundColor: 'red'
+          backgroundColor: 'blue'
         }
       }} component={HomeScreen} />
       <Stack.Screen name="Profile" options={{
