@@ -1,66 +1,117 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { Alert, Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { NavigationContainer, useIsFocused, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ProfileScreen from './screens/ProfileScreen';
-import { AntDesign } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { EvilIcons, Feather, FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import AccountScreen from './screens/AccountScreen';
+import FriendsScreen from './screens/FriendsScreen';
+import ActivityScreen from './screens/ActivityScreen';
+import GroupsScreen from './screens/GroupsScreen';
+import AddExpenseButton from './components/ui/AddExpenseButton';
+
+
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
 
 export default function App() {
 
+
   return <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen name="Home" options={{
-        // headerShown: false
-        headerStyle: {
-          backgroundColor: 'blue'
-        }
-      }} component={HomeScreen} />
-      <Stack.Screen name="Profile" options={{
-        headerStyle: {
-          backgroundColor: 'white',
-          color: 'white'
+    <View style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}>
+
+
+      <Tab.Navigator screenOptions={{
+        tabBarStyle: {
+          height: 60
+        },
+        headerLeft: () => {
+          return <Pressable onPress={() => {
+            ToastAndroid.show("Ad Pressed", ToastAndroid.SHORT)
+          }} style={{ padding: 6, flexDirection: 'row', gap: 8, paddingHorizontal: 8, marginLeft: 10, borderRadius: 10, borderWidth: 2, borderColor: "lightgray" }}>
+            <FontAwesome name="diamond" size={16} color="purple" />
+            <Text style={{ fontSize: 13, color: 'purple', fontWeight: '700' }}>50% off</Text>
+          </Pressable>
+        },
+        tabBarLabelStyle: {
+          color: 'green',
+          fontWeight: '500'
         },
         headerTitle: '',
-        headerBack: () => { return null },
-        headerBackVisible: false,
         headerRight: () => {
-          return <Pressable>
-            <AntDesign name="search1" size={24} color="black" />
+          return <Pressable style={{ marginRight: 10 }}>
+            <EvilIcons name="search" size={24} color="black" />
           </Pressable>
         }
-      }} component={ProfileScreen} />
-    </Stack.Navigator>
-  </NavigationContainer>
+      }}>
+        <Tab.Screen
+          name="Groups"
+          options={{
+            tabBarLabel: () => {
+              const focused = useIsFocused();
+              return <Text style={focused ? { color: 'green', fontSize: 12, fontWeight: '600' } : { color: 'gray', fontSize: 12, fontWeight: '400' }}>Groups</Text>
+            },
+            tabBarIcon: () => {
+              const focused = useIsFocused()
+              if (focused) {
+                return <MaterialIcons name="groups" size={24} color={"green"} />
+              }
+              return <MaterialIcons name="groups" size={24} color={"gray"} />
+            }
+          }}
+          component={GroupsScreen} />
+        <Tab.Screen name="Friends"
+          options={{
+            tabBarLabel: () => {
+              const focused = useIsFocused();
+              return <Text style={focused ? { color: 'green', fontSize: 12, fontWeight: '600' } : { color: 'gray', fontSize: 12, fontWeight: '400' }}>Friends</Text>
+            },
+            tabBarIcon: () => {
+              const focused = useIsFocused()
+              if (focused) {
+                return <FontAwesome6 name="user" size={16} color="green" />
+              }
+              return <FontAwesome6 name="user" size={16} color="gray" />
+            }
+          }}
+          component={FriendsScreen} />
+        <Tab.Screen name="Activity"
+          options={{
+            tabBarLabel: () => {
+              const focused = useIsFocused();
+              return <Text style={focused ? { color: 'green', fontSize: 12, fontWeight: '600' } : { color: 'gray', fontSize: 12, fontWeight: '400' }}>Activity</Text>
+            },
+            tabBarIcon: () => {
+              const focused = useIsFocused()
+              if (focused) {
+                return <Feather name="activity" size={18} color="green" />
+              }
+              return <Feather name="activity" size={18} color="gray" />
+            }
+          }}
+          component={ActivityScreen} />
+        <Tab.Screen name="Account"
+          options={{
+            tabBarLabel: () => {
+              const focused = useIsFocused();
+              return <Text style={focused ? { color: 'green', fontSize: 12, fontWeight: '600' } : { color: 'gray', fontSize: 12, fontWeight: '400' }}>Account</Text>
+            },
+            tabBarIcon: () => {
+              const focused = useIsFocused()
+              if (focused) {
+                return <MaterialIcons name="manage-accounts" size={24} color="green" />
+              }
+              return <MaterialIcons name="manage-accounts" size={24} color="gray" />
+            }
+          }}
+          component={AccountScreen} />
+      </Tab.Navigator>
+
+
+      <AddExpenseButton />
+
+    </View>
+  </NavigationContainer >
 }
 
-
-function HomeScreen() {
-  const navigation = useNavigation()
-
-  const handleNavigation = () => {
-    navigation.navigate('Profile')
-  }
-
-  return <View>
-    <Text>Hello From HomeScreen</Text>
-    <Pressable onPress={handleNavigation} style={{ color: "blue", backgroundColor: 'lightblue', height: 40, borderRadius: 40, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ color: 'black' }}>Go to profile</Text>
-    </Pressable>
-  </View>
-}
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  homeContainer: {
-
-  },
-  profileContainer: {
-
-  }
-});
